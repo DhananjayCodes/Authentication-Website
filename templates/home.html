@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+  <div style="text-align:center">
+    <div class="header" style="justify-content:center">
+      <img class="avatar" src="{{ url_for('static', filename='uploads/default-avatar.png') }}" alt="avatar">
+      <div>
+        <div class="h1">Welcome to your space</div>
+        <div class="h2">Personal pages • notes • photos • share with friends</div>
+      </div>
+    </div>
+
+    {% if session.get('user_id') %}
+      <div class="message success">You are logged in as <strong>{{ session.get('username') }}</strong>.</div>
+      <div style="margin-top:18px;">
+        <a href="{{ url_for('dashboard') }}"><button class="btn">Go to your dashboard</button></a>
+        <a href="{{ url_for('logout') }}"><button class="btn alt">Logout</button></a>
+      </div>
+    {% else %}
+      <div class="message error">You are not logged in.</div>
+      <div style="margin-top:16px;">
+        <a href="{{ url_for('login') }}"><button class="btn">Login</button></a>
+        <a href="{{ url_for('register') }}"><button class="btn alt">Register</button></a>
+      </div>
+      <p class="small" style="margin-top:12px">New here? Register to create your personal page, add notes, photos and share with friends.</p>
+    {% endif %}
+  </div>
+{% endblock %}

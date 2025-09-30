@@ -1,0 +1,82 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Login</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+    body{font-family:Inter,Arial;background:linear-gradient(135deg,#6a11cb,#2575fc);height:100vh;display:flex;align-items:center;justify-content:center;margin:0}
+    .card{background:#fff;padding:36px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12);width:360px;text-align:center}
+    h2{margin:0 0 18px}
+    .input{width:100%;padding:12px;margin:8px 0;border:1px solid #e2e8f0;border-radius:8px;box-sizing:border-box}
+    .password-wrap{position:relative}
+    .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:18px}
+    .btn{width:100%;padding:12px;margin-top:12px;background:#2575fc;color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600}
+    .small{margin-top:12px;color:#666}
+    .message { margin-top:10px; padding:10px; border-radius:8px; display:none; }
+    .message.success { background:#e6ffef; color:#006b3c; border:1px solid #9ff0c7; }
+    .message.error { background:#ffecec; color:#a80000; border:1px solid #ffb3b3; }
+    .back-btn { position: fixed; left: 16px; top: 16px; background: rgba(255,255,255,0.9); padding:8px 10px; border-radius:8px; text-decoration:none; color:#333; box-shadow:0 4px 10px rgba(0,0,0,0.12); }
+  </style>
+</head>
+<body>
+  <a class="back-btn" href="/">⟵ Back</a>
+
+  <div class="card">
+    <h2>Welcome Back</h2>
+    <input id="username" class="input" placeholder="Username" />
+    <div class="password-wrap">
+      <input id="password" class="input" placeholder="Password" type="password" style="padding-right:40px" />
+      <span id="eye" class="eye">👁️</span>
+    </div>
+    <button class="btn" onclick="submitLogin()">Login</button>
+    <div class="small">Don't have an account? <a href="/register_page">Register</a></div>
+
+    <div id="msg" class="message"></div>
+  </div>
+
+  <script>
+    const pwd = document.getElementById("password");
+    const eye = document.getElementById("eye");
+    eye.addEventListener("click", () => {
+      if (pwd.type === "password") { pwd.type = "text"; eye.textContent = "🙈"; }
+      else { pwd.type = "password"; eye.textContent = "👁️"; }
+    });
+
+    async function submitLogin(){
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const msg = document.getElementById("msg");
+      msg.style.display = "none";
+
+      if(!username || !password){ showMsg("Enter username and password", "error"); return; }
+
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({username, password})
+      });
+
+      if(res.ok){
+        const data = await res.json();
+        localStorage.setItem("userToken", data.token);
+        showMsg("Authenticated ✓ Redirecting...", "success");
+        setTimeout(()=> window.location.href = "/welcome_page", 900);
+      } else {
+        const err = await res.json();
+        showMsg(err.error || "Login failed", "error");
+      }
+    }
+
+    function showMsg(text, kind){
+      const msg = document.getElementById("msg");
+      msg.innerText = text;
+      msg.className = "message " + (kind === "success" ? "success": "error");
+      msg.style.display = "block";
+    }
+  </script>
+</body>
+</html>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">

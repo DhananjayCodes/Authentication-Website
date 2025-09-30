@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Page Detail{% endblock %}
+{% block content %}
+<h2>{{ page[2] }}</h2>
+
+<h3>Add Content</h3>
+<form method="post" action="{{ url_for('add_content') }}" enctype="multipart/form-data">
+  <input type="hidden" name="page_id" value="{{ page[0] }}">
+  <select name="type" required>
+    <option value="note">Note</option>
+    <option value="photo">Photo</option>
+    <option value="video">Video</option>
+  </select>
+  <textarea name="note" placeholder="Write note here"></textarea>
+  <input type="file" name="file">
+  <button type="submit">Add</button>
+</form>
+
+<h3>Content</h3>
+{% for c in content %}
+<div class="card">
+  {% if c[2]=="note" %}<p>{{ c[3] }}</p>{% endif %}
+  {% if c[2]=="photo" %}<img src="{{ url_for('static', filename='uploads/'+c[3]) }}">{% endif %}
+  {% if c[2]=="video" %}<video src="{{ url_for('static', filename='uploads/'+c[3]) }}" controls></video>{% endif %}
+  <a href="{{ url_for('delete_content', content_id=c[0]) }}"><button class="btn-alt">Delete</button></a>
+</div>
+{% endfor %}
+{% endblock %}

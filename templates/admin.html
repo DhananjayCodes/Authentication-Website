@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+  <h2>Admin Console</h2>
+  <div class="card">
+    <table class="table" style="width:100%">
+      <thead><tr><th>ID</th><th>Username</th><th>Name</th><th>Age</th><th>Phone</th><th>Admin</th><th>Actions</th></tr></thead>
+      <tbody>
+      {% for u in users %}
+        <tr>
+          <td>{{ u['id'] }}</td>
+          <td>{{ u['username'] }}</td>
+          <td>{{ u['name'] }}</td>
+          <td>{{ u['age'] }}</td>
+          <td>{{ u['phone'] }}</td>
+          <td>{{ 'Yes' if u['is_admin'] else 'No' }}</td>
+          <td>
+            <form method="post" action="{{ url_for('admin_delete_user', uid=u['id']) }}" style="display:inline">
+              <button class="btn alt" type="submit">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

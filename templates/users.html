@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Registered Users</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    table {
+      width: 90%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: #fff;
+      box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #007BFF;
+      color: white;
+    }
+    tr:hover {
+      background: #f1f1f1;
+    }
+    img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <h2>Registered Users</h2>
+  <table id="usersTable">
+    <thead>
+      <tr>
+        <th>Profile</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Phone</th>
+        <th>Username</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadUsers() {
+      try {
+        const response = await fetch("/list_users");
+        const users = await response.json();
+        const tbody = document.querySelector("#usersTable tbody");
+        tbody.innerHTML = "";
+
+        users.forEach(user => {
+          const tr = document.createElement("tr");
+
+          // Profile picture
+          const imgTd = document.createElement("td");
+          if (user.profile_picture) {
+            const img = document.createElement("img");
+            img.src = user.profile_picture;
+            img.alt = user.username;
+            imgTd.appendChild(img);
+          } else {
+            imgTd.textContent = "No Photo";
+          }
+          tr.appendChild(imgTd);
+
+          // Other columns
+          tr.innerHTML += `
+            <td>${user.name || ""}</td>
+            <td>${user.age || ""}</td>
+            <td>${user.phone || ""}</td>
+            <td>${user.username}</td>
+          `;
+
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Error loading users:", err);
+      }
+    }
+
+    // Load on page start
+    loadUsers();
+  </script>
+</body>
+</html>
+<a href="javascript:history.back()" class="back-btn">← Back</a>
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">

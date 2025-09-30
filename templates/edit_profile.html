@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+  <h2>Edit profile</h2>
+  <form method="post" action="{{ url_for('edit_profile') }}" enctype="multipart/form-data" style="max-width:640px;margin:0 auto">
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+      <div class="avatar-circle">
+        <img src="{{ url_for('uploads', filename=user.profile_picture) if user.profile_picture else url_for('static', filename='uploads/default-avatar.png') }}" style="width:100%;height:100%;object-fit:cover">
+      </div>
+      <div style="flex:1">
+        <input class="input" name="name" placeholder="Full name" value="{{ user.name or '' }}">
+        <div class="form-row" style="margin-top:6px">
+          <div class="row-half"><input class="input" name="age" placeholder="Age" type="number" value="{{ user.age or '' }}"></div>
+          <div class="row-half"><input class="input" name="phone" placeholder="Phone" value="{{ user.phone or '' }}"></div>
+        </div>
+      </div>
+    </div>
+
+    <label class="small">Change profile photo</label>
+    <input type="file" name="profile_picture" accept="image/*">
+
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <input class="btn" type="submit" value="Save changes">
+      <a href="{{ url_for('dashboard') }}"><button type="button" class="btn alt">Cancel</button></a>
+    </div>
+  </form>
+{% endblock %}

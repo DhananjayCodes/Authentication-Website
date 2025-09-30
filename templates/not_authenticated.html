@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Not Authenticated</title>
+  <style>
+    body{font-family:Inter,Arial;background:linear-gradient(135deg,#ff416c,#ff4b2b);height:100vh;display:flex;align-items:center;justify-content:center;margin:0}
+    .card{background:#fff;padding:30px;border-radius:12px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+    h1{color:#d6332a}
+    .btn{margin-top:16px;padding:10px 14px;border-radius:8px;border:none;background:#2575fc;color:#fff;cursor:pointer}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>❌ Not Authenticated</h1>
+    <p>Please login to access the dashboard.</p>
+    <button class="btn" onclick="location.href='/'">Go to Login</button>
+  </div>
+</body>
+</html>
+<a href="javascript:history.back()" class="back-btn">← Back</a>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">

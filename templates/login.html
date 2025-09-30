@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+  <div style="max-width:420px;margin:0 auto">
+    <h2 style="text-align:center;margin-bottom:12px">Welcome Back</h2>
+    {% if error %}<div class="message error">{{ error }}</div>{% endif %}
+    <form method="post" action="{{ url_for('login') }}">
+      <input class="input" name="username" placeholder="Username" required>
+      <input class="input" name="password" placeholder="Password" type="password" required>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <input class="btn" type="submit" value="Login">
+        <a href="{{ url_for('register') }}"><button type="button" class="btn alt">Register</button></a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

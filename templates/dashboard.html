@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+  <div style="display:flex;gap:20px;align-items:flex-start;">
+    <!-- LEFT: profile card -->
+    <div style="width:280px">
+      <div class="card" style="text-align:center;padding:22px">
+        <div class="avatar-circle">
+          <img id="dashAvatar" src="{{ profile_url }}" style="width:100%;height:100%;object-fit:cover" alt="avatar">
+        </div>
+        <h3 style="margin-top:12px">{{ user.username }}</h3>
+        <p class="small">{{ user.name or '—' }}</p>
+        <div style="margin-top:10px">
+          <a href="{{ url_for('edit_profile') }}"><button class="btn">Edit profile</button></a>
+          <a href="{{ url_for('logout') }}"><button class="btn alt">Logout</button></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: notes / media / sharing -->
+    <div style="flex:1">
+      <div class="card">
+        <h4>Notes</h4>
+        <form method="post" action="{{ url_for('add_note') }}">
+          <textarea name="content" class="input" placeholder="Write a note..." required style="min-height:70px"></textarea>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <button class="btn" type="submit">Add note</button>
+          </div>
+        </form>
+
+        <div style="margin-top:12px">
+          {% for n in notes %}
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 6px;border-bottom:1px solid #f2f6fa">
+              <div>{{ n['content'] }}</div>
+              <form method="post" action="{{ url_for('delete_note', note_id=n['id']) }}" style="margin:0">
+                <button class="btn alt" type="submit">Delete</button>
+              </form>
+            </div>
+          {% else %}
+            <div class="small" style="padding:8px 6px">No notes yet</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h4>Photos & Videos</h4>
+        <form method="post" action="{{ url_for('add_media') }}" enctype="multipart/form-data">
+          <div style="display:flex;gap:8px;align-items:center">
+            <input type="file" name="file" accept="image/*,video/*" required>
+            <button class="btn" type="submit">Upload</button>
+          </div>
+        </form>
+
+        <div class="media-grid">
+          {% for m in media %}
+            <div class="media-item card">
+              {% if m['type']=='photo' %}
+                <img src="{{ url_for('uploads', filename=m['filename']) }}" alt="">
+              {% else %}
+                <video controls src="{{ url_for('uploads', filename=m['filename']) }}"></video>
+              {% endif %}
+              <div style="display:flex;justify-content:space-between;margin-top:6px">
+                <small class="small">{{ m['created_at'] }}</small>
+                <form method="post" action="{{ url_for('delete_media', mid=m['id']) }}">
+                  <button class="btn alt" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
+          {% else %}
+            <div class="small" style="padding:8px 6px">No media yet</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h4>Share your page</h4>
+        <form method="post" action="{{ url_for('share_page') }}">
+          <div style="display:flex;gap:8px;align-items:center">
+            <input class="input" name="username" placeholder="Username to share with" required>
+            <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" name="can_edit"> Allow edit</label>
+            <button class="btn" type="submit">Share</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h4>Security</h4>
+        <p class="small">Change your password (click the button to reveal form)</p>
+        <button class="btn" id="showPwBtn">Change password</button>
+        <div id="pwBox" style="display:none;margin-top:12px">
+          <form id="pwForm">
+            <input class="input" name="old_password" placeholder="Old password" type="password" required>
+            <input class="input" name="new_password" placeholder="New password" type="password" required>
+            <div style="margin-top:8px">
+              <button class="btn" type="submit">Save</button>
+            </div>
+            <div id="pwMsg" class="small" style="margin-top:8px"></div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  document.getElementById("showPwBtn").addEventListener("click", ()=>{
+    const box = document.getElementById("pwBox");
+    box.style.display = box.style.display === "none" ? "block" : "none";
+  });
+
+  document.getElementById("pwForm").addEventListener("submit", async (e)=>{
+    e.preventDefault();
+    const form = e.target;
+    const data = new URLSearchParams(new FormData(form));
+    const res = await fetch("{{ url_for('change_password') }}", { method:"POST", body: data });
+    const j = await res.json();
+    const msg = document.getElementById("pwMsg");
+    if(res.ok){ msg.textContent = j.message; msg.style.color="green"; form.reset(); }
+    else { msg.textContent = j.error || "Error"; msg.style.color="red"; }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+  <div style="text-align:center">
+    <div class="header" style="justify-content:center">
+      <img class="avatar" src="{{ url_for('static', filename='uploads/default-avatar.png') }}" alt="avatar">
+      <div>
+        <div class="h1">Hello{{ ' ' + username if username else '' }}</div>
+        <div class="h2">Welcome to your space</div>
+      </div>
+    </div>
+
+    {% if authenticated %}
+      <div class="message success">✅ You are authenticated — welcome!</div>
+      <div style="margin-top:18px">
+        <a href="{{ url_for('dashboard') }}"><button class="btn">Open Dashboard</button></a>
+      </div>
+    {% else %}
+      <div class="message error">❌ You are not authenticated. Please <a href="{{ url_for('login') }}">login</a>.</div>
+    {% endif %}
+  </div>
+{% endblock %}

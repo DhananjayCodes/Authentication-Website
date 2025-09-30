@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}My Pages{% endblock %}
+{% block content %}
+<h2>My Pages</h2>
+<a href="{{ url_for('create_page') }}"><button>Create New Page</button></a>
+{% for page in pages %}
+<div class="card">
+  <h3>{{ page[2] }}</h3>
+  <a href="{{ url_for('page_detail', page_id=page[0]) }}"><button>Open</button></a>
+</div>
+{% else %}
+<p>No pages yet.</p>
+{% endfor %}
+{% endblock %}
