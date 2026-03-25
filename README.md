@@ -1,2 +1,2 @@
-# website_flux_authentication
-It is a website that register the user and when they login it shows them that they are authenticated and it allows the user to store their information, notes, photos/videos which they can share using other usernames
+# Authentication website
+It is a website that register the user and when they login it shows them that they are authenticated and it allows the user to store their information, notes, photos/videos which they can share using other usernames...
